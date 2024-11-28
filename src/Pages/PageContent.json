@@ -1,0 +1,51 @@
+{
+    "tin-tuc": [
+      {
+        "title": "Tin Tức Mới Nhất",
+        "date": "2024-11-27",
+        "content": "<p>Đây là tin tức mới nhất về các sự kiện công nghệ. Hãy cùng tìm hiểu thêm về những cập nhật gần đây.</p>"
+      },
+      {
+        "title": "Giới Thiệu Về Sản Phẩm Mới",
+        "date": "2024-11-20",
+        "content": "<p>Chúng tôi rất vui khi giới thiệu sản phẩm mới của mình, với nhiều tính năng hấp dẫn.</p>"
+      }
+    ],
+    "su-kien": [
+      {
+        "title": "Lễ Hội Công Nghệ 2024",
+        "date": "2024-12-01",
+        "content": "<p>Lễ hội công nghệ 2024 sẽ diễn ra tại trung tâm hội nghị quốc gia, với sự tham gia của nhiều chuyên gia nổi tiếng.</p>"
+      },
+      {
+        "title": "Buổi Gặp Mặt Cộng Đồng Người Dùng",
+        "date": "2024-11-30",
+        "content": "<p>Chúng tôi tổ chức buổi gặp mặt cộng đồng người dùng để chia sẻ những kinh nghiệm và kiến thức về sản phẩm mới.</p>"
+      }
+    ],
+    "tinh-nang": [
+      {
+        "title": "Tính Năng Mới Cập Nhật",
+        "date": "2024-11-15",
+        "content": "<p>Chúng tôi vừa cập nhật một số tính năng mới cho ứng dụng của mình. Hãy xem các thay đổi trong bản cập nhật lần này.</p>"
+      },
+      {
+        "title": "Chức Năng Chia Sẻ Dữ Liệu",
+        "date": "2024-11-10",
+        "content": "<p>Với tính năng chia sẻ dữ liệu, người dùng có thể dễ dàng gửi thông tin giữa các thiết bị mà không gặp khó khăn.</p>"
+      }
+    ],
+    "huong-dan": [
+      {
+        "title": "Hướng Dẫn Cài Đặt Ứng Dụng",
+        "date": "2024-11-05",
+        "content": "<p>Để cài đặt ứng dụng trên thiết bị của bạn, hãy làm theo các bước đơn giản sau: 1. Tải về ứng dụng, 2. Cài đặt và 3. Khởi động ứng dụng.</p>"
+      },
+      {
+        "title": "Cách Sử Dụng Tính Năng Mới",
+        "date": "2024-10-28",
+        "content": "<p>Chúng tôi đã cập nhật một tính năng mới cho ứng dụng của mình. Đây là hướng dẫn chi tiết cách sử dụng tính năng này để bạn có thể tận dụng tối đa.</p>"
+      }
+    ]
+  }
+  
