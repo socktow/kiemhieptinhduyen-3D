@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import "./ShopCategory.scss";
-import pageContent from './PageContent.json';  // Import file JSON
+import pageContent from './PageContent.json';
 
 const PageCateGory = (props) => {
   const { category, banner } = props;
   const [content, setContent] = useState(null);
-  const navigate = useNavigate(); // Khởi tạo useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Tải nội dung từ file JSON dựa trên category
     const categoryContent = pageContent[category] || [];
     setContent(categoryContent);
   }, [category]);
@@ -20,20 +19,12 @@ const PageCateGory = (props) => {
       .replace(/\s+/g, '-')
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, '');
-  
-    // Điều hướng đến URL chi tiết bài viết
     navigate(`/home/news/${category}/${formattedTitle}`);
   };
-  
 
   return (
     <div className="shop-category">
       <img className="shopcategory-banner" src={banner} alt="Banner" />
-      <div className="shopcategory-indexSort">
-        <p>
-          <span>Showing {content ? content.length : 0} articles</span>
-        </p>
-      </div>
       <div className="shopcategory-content">
         {content && content.length > 0 ? (
           content.map((item, index) => (

@@ -1,7 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import avatarImg from "../../Assets/img-avata.png";
 import logo from "../../Assets/logo.png";
 import '../Scss/Navbar.scss';
+
 const Navbar = () => {
   const navItems = [
     { href: "/home/news/tin-tuc", label: "Tin Tức" },
@@ -21,28 +23,36 @@ const Navbar = () => {
       <nav className="header_pc">
         <ul className="navbar-logo">
           <li>
-            <a href="/" className="navbar-logo-link">
+            <Link to="/" className="navbar-logo-link">
               <img src={avatarImg} alt="Avatar" />
               <div className="navbar-logo-text">
                 <span>Kiếm Hiệp Tình 3D</span>
                 <span>NPH ChuChu</span>
               </div>
-            </a>
+            </Link>
           </li>
         </ul>
         <ul className="navbar-links">
           {navItems.map((item, index) => (
             <React.Fragment key={index}>
               <li>
-                <a href={item.href} target={item.target || "_self"}>
-                  {item.label}
-                </a>
+                {item.target ? (
+                  // Nếu có target="_blank", dùng thẻ <a> thông thường
+                  <a href={item.href} target={item.target} rel="noopener noreferrer">
+                    {item.label}
+                  </a>
+                ) : (
+                  // Nếu không có target, dùng <Link> để chuyển trang nội bộ mà không tải lại
+                  <Link to={item.href}>
+                    {item.label}
+                  </Link>
+                )}
               </li>
               {index === Math.floor(navItems.length / 2) - 1 && (
                 <li key="logo">
-                  <a href="home.html">
+                  <Link to="/home">
                     <img src={logo} alt="Logo" />
-                  </a>
+                  </Link>
                 </li>
               )}
             </React.Fragment>

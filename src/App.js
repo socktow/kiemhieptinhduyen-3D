@@ -7,6 +7,7 @@ import EventLayout from "./Layouts/EventLayout/Index";
 import Login from "./Pages/LoginSignup";
 import PageCateGory from "./Pages/PageCateGory";
 import PageContent from "./Pages/PageContent";
+import ImgContentPage from "./Assets/img-bg-news-top.jpg"
 function App() {
   const [isEventActive] = useState(false);
 
@@ -21,30 +22,29 @@ function App() {
         <Route path="/home" element={<MainLayout />}>
           <Route index element={<Landing />} />
           <Route path="/home/login" element={<Login />} />
-          {/* Nội dung bài viết */}
           <Route path="/home/news/:category" element={<PageCateGory />} />
           <Route
             path="/home/news/tin-tuc"
             element={
-              <PageCateGory banner="Tin Tức Banner" category="tin-tuc" />
+              <PageCateGory banner={ImgContentPage} category="tin-tuc" />
             }
           />
           <Route
             path="/home/news/su-kien"
             element={
-              <PageCateGory banner="Sự Kiện Banner" category="su-kien" />
+              <PageCateGory banner={ImgContentPage} category="su-kien" />
             }
           />
           <Route
             path="/home/news/tinh-nang"
             element={
-              <PageCateGory banner="Tính Năng Banner" category="tinh-nang" />
+              <PageCateGory banner={ImgContentPage} category="tinh-nang" />
             }
           />
           <Route
             path="/home/news/huong-dan"
             element={
-              <PageCateGory banner="Hướng Dẫn Banner" category="huong-dan" />
+              <PageCateGory banner={ImgContentPage} category="huong-dan" />
             }
           />
 
