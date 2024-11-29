@@ -1,30 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import pageContent from './PageContent.json'; // Giả sử bạn có file pageContent.json
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const PageContent = () => {
-  const { category, title } = useParams(); // Lấy category và title từ URL
-  const [content, setContent] = useState(null);
+  const { category, title } = useParams();  // Lấy category và title từ URL
+  const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Chuyển đổi title sang định dạng có thể tìm kiếm trong JSON
-    const formattedTitle = title.replace(/-/g, ' '); 
-    const categoryContent = pageContent[category] || [];
-    const article = categoryContent.find(item => item.title.toLowerCase().replace(/\s+/g, '-') === title);
-    setContent(article);
-  }, [category, title]);
+    const fetchProductDetails = async () => {
+      try {
+        const response = await fetch('https://fakestoreapi.com/products');
+        const data = await response.json();
+        const decodedTitle = title.replace(/-/g, ' ');  // Thay tất cả dấu gạch nối thành khoảng trắng
+        
+        // Tìm sản phẩm có title khớp
+        const productData = data.find(p => p.title === decodedTitle);
+
+        if (productData) {
+          setProduct(productData);  // Nếu tìm thấy sản phẩm, set dữ liệu vào state
+        } else {
+          navigate('/404');  // Nếu không tìm thấy sản phẩm, chuyển đến trang lỗi
+        }
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    };
+
+    fetchProductDetails();  // Gọi hàm fetch khi component mount
+
+  }, [title, navigate]);  // Chạy lại khi title thay đổi
+
+  if (!product) return <div>Loading...</div>;  // Hiển thị loading khi chưa có dữ liệu
 
   return (
-    <div>
-      {content ? (
-        <div>
-          <h1>{content.title}</h1>
-          <p><strong>Ngày Đăng:</strong> {content.date}</p>
-          <div dangerouslySetInnerHTML={{ __html: content.content }} />
-        </div>
-      ) : (
-        <p>Bài viết không tồn tại.</p>
-      )}
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">{product.title}</h2>
+      <img
+        src={product.image}
+        alt={product.title}
+        className="w-full h-64 object-cover rounded-lg shadow-md mb-4"
+      />
+      <p className="text-lg font-semibold mb-2">${product.price}</p>
+      <p className="text-gray-600 mb-4">{product.description}</p>
+      <p className="text-sm text-gray-500">Category: {product.category}</p>
     </div>
   );
 };

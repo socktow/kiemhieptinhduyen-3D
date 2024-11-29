@@ -6,8 +6,8 @@ import '../Scss/Navbar.scss';
 
 const Navbar = () => {
   const navItems = [
-    { href: "/home/news/tin-tuc", label: "Tin Tức" },
-    { href: "/home/news/su-kien", label: "Sự Kiện" },
+    { href: "/home/news/menclother", label: "Tin Tức" },
+    { href: "/home/news/womenclother", label: "Sự Kiện" },
     { href: "/home/news/tinh-nang", label: "Tính Năng" },
     { href: "/home/news/huong-dan", label: "Hướng Dẫn" },
     {

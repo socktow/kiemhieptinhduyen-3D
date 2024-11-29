@@ -7,48 +7,47 @@ import EventLayout from "./Layouts/EventLayout/Index";
 import Login from "./Pages/LoginSignup";
 import PageCateGory from "./Pages/PageCateGory";
 import PageContent from "./Pages/PageContent";
-import ImgContentPage from "./Assets/img-bg-news-top.jpg"
+import ImgContentPage from "./Assets/img-bg-news-top.jpg";
+
 function App() {
-  const [isEventActive] = useState(false);
+  const [isEventActive] = useState(false); // Trạng thái xác định EventLayout
 
   return (
     <BrowserRouter>
       <Routes>
-        {isEventActive ? (
-          <Route path="/" element={<EventLayout />} />
-        ) : (
-          <Route path="/" element={<Navigate to="/home" replace />} />
-        )}
+        {/* Điều hướng trang chính */}
+        <Route
+          path="/"
+          element={
+            isEventActive ? <EventLayout /> : <Navigate to="/home" replace />
+          }
+        />
+
+        {/* MainLayout */}
         <Route path="/home" element={<MainLayout />}>
+          {/* Trang landing */}
           <Route index element={<Landing />} />
-          <Route path="/home/login" element={<Login />} />
-          <Route path="/home/news/:category" element={<PageCateGory />} />
+
+          {/* Trang login */}
+          <Route path="login" element={<Login />} />
+
+          {/* Trang danh mục bài viết */}
+          <Route path="news/:category" element={<PageCateGory />} />
           <Route
-            path="/home/news/tin-tuc"
+            path="news/menclother"
             element={
-              <PageCateGory banner={ImgContentPage} category="tin-tuc" />
+              <PageCateGory banner={ImgContentPage} category="menclother" />
             }
           />
           <Route
-            path="/home/news/su-kien"
+            path="news/womenclother"
             element={
-              <PageCateGory banner={ImgContentPage} category="su-kien" />
-            }
-          />
-          <Route
-            path="/home/news/tinh-nang"
-            element={
-              <PageCateGory banner={ImgContentPage} category="tinh-nang" />
-            }
-          />
-          <Route
-            path="/home/news/huong-dan"
-            element={
-              <PageCateGory banner={ImgContentPage} category="huong-dan" />
+              <PageCateGory banner={ImgContentPage} category="womenclother" />
             }
           />
 
-          <Route path="/home/news/:category/:title" element={<PageContent />} />
+          {/* Trang nội dung bài viết */}
+          <Route path="news/:category/:title" element={<PageContent />} />
         </Route>
       </Routes>
     </BrowserRouter>
