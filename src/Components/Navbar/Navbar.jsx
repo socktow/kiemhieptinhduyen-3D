@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import avatarImg from "../../Assets/img-avata.png";
 import logo from "../../Assets/logo.png";
+import { useSelector } from "react-redux"; // Import useSelector
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { userInfo } = useSelector((state) => state.user); // Get userInfo from Redux store
 
   const navItems = [
     { href: "/home/news/tin-tuc", label: "Tin Tức" },
@@ -92,14 +94,28 @@ const Navbar = () => {
               ))}
             </ul>
           </div>
-          {/* Login Button */}
+
+          {/* Login/Logout Button */}
           <div className="hidden lg:block">
-            <Link
-              to="/home/login"
-              className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
-            >
-              Đăng Nhập
-            </Link>
+            {userInfo ? (
+              <button
+                className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
+                onClick={() => {
+                  // Handle logout logic here if needed
+                  localStorage.removeItem("token");
+                  window.location.replace("/home/login"); // Redirect to login
+                }}
+              >
+                {userInfo.username}
+              </button>
+            ) : (
+              <Link
+                to="/home/login"
+                className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
+              >
+                Đăng Nhập
+              </Link>
+            )}
           </div>
         </div>
       </nav>
