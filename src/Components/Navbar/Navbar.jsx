@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import avatarImg from "../../Assets/img-avata.png";
 import logo from "../../Assets/logo.png";
-import '../Scss/Navbar.scss';
 
 const Navbar = () => {
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const navItems = [
-    { href: "/home/news/menclother", label: "Tin Tức" },
-    { href: "/home/news/womenclother", label: "Sự Kiện" },
+    { href: "/home/news/tin-tuc", label: "Tin Tức" },
+    { href: "/home/news/su-kien", label: "Sự Kiện" },
     { href: "/home/news/tinh-nang", label: "Tính Năng" },
     { href: "/home/news/huong-dan", label: "Hướng Dẫn" },
     {
@@ -15,50 +16,95 @@ const Navbar = () => {
       label: "Cộng Đồng",
       target: "_blank",
     },
-    { href: "/home/login", label: "Đăng Nhập" },
   ];
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!isMobileMenuOpen);
+    if (!isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  };
 
   return (
     <div className="main-page">
-      <nav className="header_pc">
-        <ul className="navbar-logo">
-          <li>
-            <Link to="/" className="navbar-logo-link">
-              <img src={avatarImg} alt="Avatar" />
-              <div className="navbar-logo-text">
-                <span>Kiếm Hiệp Tình 3D</span>
-                <span>NPH ChuChu</span>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1c253e] border-b-4 border-[#445472]">
+        <div className="flex justify-between items-center py-4 px-4 md:px-20">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center text-white no-underline">
+              <img
+                src={avatarImg}
+                alt="Avatar"
+                className="h-16 w-16 md:h-20 md:w-20 mr-4 object-cover"
+              />
+              <div className="flex flex-col">
+                <span className="text-lg md:text-xl font-bold">
+                  Kiếm Hiệp Tình 3D
+                </span>
+                <span className="text-base md:text-lg opacity-80">
+                  NPH ChuChu
+                </span>
               </div>
             </Link>
-          </li>
-        </ul>
-        <ul className="navbar-links">
-          {navItems.map((item, index) => (
-            <React.Fragment key={index}>
-              <li>
-                {item.target ? (
-                  // Nếu có target="_blank", dùng thẻ <a> thông thường
-                  <a href={item.href} target={item.target} rel="noopener noreferrer">
-                    {item.label}
-                  </a>
-                ) : (
-                  // Nếu không có target, dùng <Link> để chuyển trang nội bộ mà không tải lại
-                  <Link to={item.href}>
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-              {index === Math.floor(navItems.length / 2) - 1 && (
-                <li key="logo">
-                  <Link to="/home">
-                    <img src={logo} alt="Logo" />
-                  </Link>
+          </div>
+
+          {/* Menu Button for Mobile */}
+          <button
+            className="lg:hidden text-white text-3xl focus:outline-none"
+            onClick={toggleMobileMenu}
+          >
+            {isMobileMenuOpen ? "✕" : "☰"}
+          </button>
+
+          {/* Navbar Links */}
+          <div
+            className={`${
+              isMobileMenuOpen
+                ? "fixed inset-0 bg-[#1c253e] pt-20 backdrop-blur-lg bg-opacity-95"
+                : "hidden"
+            } lg:relative lg:block lg:bg-transparent lg:pt-0`}
+          >
+            <ul className="flex flex-col lg:flex-row items-center justify-center lg:space-x-10 space-y-6 lg:space-y-0">
+              {navItems.map((item, index) => (
+                <li key={index} className="w-full text-center lg:w-auto">
+                  {item.target ? (
+                    <a
+                      href={item.href}
+                      target={item.target}
+                      rel="noopener noreferrer"
+                      className="text-white text-xl font-bold hover:text-[#ff9800] transition block py-2 hover:bg-[#2a3552] rounded-lg px-4"
+                      onClick={toggleMobileMenu}
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="text-white text-xl font-bold hover:text-[#ff9800] transition block py-2 hover:bg-[#2a3552] rounded-lg px-4"
+                      onClick={toggleMobileMenu}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
-              )}
-            </React.Fragment>
-          ))}
-        </ul>
+              ))}
+            </ul>
+          </div>
+          {/* Login Button */}
+          <div className="hidden lg:block">
+            <Link
+              to="/home/login"
+              className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
+            >
+              Đăng Nhập
+            </Link>
+          </div>
+        </div>
       </nav>
+      {/* Add spacing to prevent content from hiding under fixed navbar */}
+      <div className="h-24 md:h-32"></div>
     </div>
   );
 };
