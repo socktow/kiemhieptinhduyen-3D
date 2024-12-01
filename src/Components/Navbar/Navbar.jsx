@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import avatarImg from "../../Assets/img-avata.png";
-import logo from "../../Assets/logo.png";
 import { useSelector } from "react-redux"; // Import useSelector
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // State to control dropdown
   const { userInfo } = useSelector((state) => state.user); // Get userInfo from Redux store
 
   const navItems = [
@@ -29,10 +29,16 @@ const Navbar = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Remove token and redirect to login page
+    localStorage.removeItem("token");
+    window.location.replace("/home/login");
+  };
+
   return (
     <div className="main-page">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1c253e] border-b-4 border-[#445472]">
-        <div className="flex justify-between items-center py-4 px-4 md:px-20">
+        <div className="flex justify-between items-center py-4 px-6 md:px-30">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center text-white no-underline">
@@ -43,7 +49,7 @@ const Navbar = () => {
               />
               <div className="flex flex-col">
                 <span className="text-lg md:text-xl font-bold">
-                  Kiếm Hiệp Tình 3D
+                  Kiếm Hiệp Tình Duyên
                 </span>
                 <span className="text-base md:text-lg opacity-80">
                   NPH ChuChu
@@ -96,18 +102,68 @@ const Navbar = () => {
           </div>
 
           {/* Login/Logout Button */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block relative">
             {userInfo ? (
-              <button
-                className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
-                onClick={() => {
-                  // Handle logout logic here if needed
-                  localStorage.removeItem("token");
-                  window.location.replace("/home/login"); // Redirect to login
-                }}
-              >
-                {userInfo.username}
-              </button>
+              <div className="relative">
+                <button
+                  className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
+                  onClick={() => setDropdownOpen(!isDropdownOpen)} // Toggle dropdown
+                >
+                  {userInfo.username}
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 bg-[#2a3552] text-white rounded-lg shadow-lg mt-2 w-48 z-10">
+                    <ul className="space-y-2 p-2">
+                      <li>
+                        <Link
+                          to="/home/nap-tien"
+                          className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          Nạp Tiền
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/home/user"
+                          className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          Thông Tin
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/home/gift-code"
+                          className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          GiftCode
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/home/gio-hang"
+                          className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          Giỏ Hàng
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg w-full text-left"
+                        >
+                          Thoát
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 to="/home/login"

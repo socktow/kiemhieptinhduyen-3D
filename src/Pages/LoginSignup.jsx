@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, message, Checkbox } from "antd";
-import api from "../Api/api";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import api from "../Api/api";
 import { fetchUserInfo } from "../Redux/UserSlice"; 
 import "./LoginSignup.scss";
 
@@ -15,6 +16,13 @@ const LoginSignup = () => {
   });
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/home/user");
+    }
+  }, [navigate]);
 
   const changeHandler = (e) => {
     setFormData({
@@ -47,15 +55,23 @@ const LoginSignup = () => {
     setLoading(true);
 
     try {
-      const data = await api.login(formData.username, formData.password);
+      const data = await api.login({
+        username: formData.username, // Đảm bảo chỉ gửi đúng `username` và `password`
+        password: formData.password,
+      });
       message.success("Login successful!");
       setLoading(false);
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.authToken); // Lưu authToken nhận từ backend
       dispatch(fetchUserInfo(formData.username));
+
+      // Chuyển hướng đến trang # sau khi đăng nhập thành công
+      navigate("#");
     } catch (error) {
-      message.error(
-        error.response?.data?.errors || "Login failed. Please try again."
-      );
+      const errorMsg =
+        error.response?.data?.errors === "Invalid Email"
+          ? "Invalid username. Please check and try again."
+          : error.response?.data?.errors || "Login failed. Please try again.";
+      message.error(errorMsg); // Hiển thị thông báo lỗi phù hợp
       setLoading(false);
     }
   };

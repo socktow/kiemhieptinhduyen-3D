@@ -1,20 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../Api/api"; // Assuming the API file is named Api.js
+import api from "../Api/api";
 
 // Async Thunk to fetch user info
 export const fetchUserInfo = createAsyncThunk(
   "user/fetchUserInfo",
-  async (username, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await api.getUserInfo(username);
-      return response; // Return the response data directly
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await api.getUserInfo(token);
+      console.log("Fetched User Info:", response);
+      return response.user; 
     } catch (error) {
+      console.error("Error fetching user info:", error);
       return rejectWithValue(error.response?.data || "Error fetching user info");
     }
   }
 );
 
-// Create a user slice
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -23,7 +29,6 @@ const userSlice = createSlice({
     error: null,
   },
   reducers: {
-    // You can add synchronous reducers here if needed
     clearUserInfo(state) {
       state.userInfo = null;
       state.status = "idle";
@@ -38,17 +43,15 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.userInfo = action.payload; // Save the fetched user info
+        state.userInfo = action.payload;
         state.error = null;
       })
       .addCase(fetchUserInfo.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload; // Save the error message
+        state.error = action.payload;
       });
   },
 });
-
-// Export the synchronous actions
 export const { clearUserInfo } = userSlice.actions;
 
 // Export the reducer
