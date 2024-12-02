@@ -56,22 +56,22 @@ const LoginSignup = () => {
 
     try {
       const data = await api.login({
-        username: formData.username, // Đảm bảo chỉ gửi đúng `username` và `password`
+        username: formData.username,
         password: formData.password,
       });
       message.success("Login successful!");
       setLoading(false);
-      localStorage.setItem("token", data.authToken); // Lưu authToken nhận từ backend
+      localStorage.setItem("token", data.authToken);
       dispatch(fetchUserInfo(formData.username));
 
-      // Chuyển hướng đến trang # sau khi đăng nhập thành công
-      navigate("#");
+      // Thay đổi từ # thành /home/user
+      navigate("/home/user");
     } catch (error) {
       const errorMsg =
         error.response?.data?.errors === "Invalid Email"
           ? "Invalid username. Please check and try again."
           : error.response?.data?.errors || "Login failed. Please try again.";
-      message.error(errorMsg); // Hiển thị thông báo lỗi phù hợp
+      message.error(errorMsg);
       setLoading(false);
     }
   };
