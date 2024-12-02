@@ -11,7 +11,6 @@ const MocNap = () => {
     if (num >= 1_000) return `${num / 1_000}k`;
     return num.toString();
   };
-  const tiennap = 500000;
   const milestones = {
     week: [
       { id: 1, type: 20000, promotion: 5000, status: 'Chưa Nhận' },
@@ -62,7 +61,7 @@ const MocNap = () => {
 
   return (
     <div className="p-5 bg-gray-100 rounded shadow-md">
-      <h3 className="text-xl font-bold mb-4">Bạn Đã Nạp : ${tiennap}</h3>
+      <h3 className="text-xl font-bold mb-4">Bạn Đã Nạp : </h3>
       <p className="mb-4">
         Chu Kỳ Nạp: 01/{currentMonth}/{currentYear} - {lastDayOfMonth}/{currentMonth}/{currentYear}
       </p>

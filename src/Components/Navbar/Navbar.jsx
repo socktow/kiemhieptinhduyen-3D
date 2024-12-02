@@ -5,8 +5,8 @@
 
   const Navbar = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [isDropdownOpen, setDropdownOpen] = useState(false); // State to control dropdown
-    const { userInfo } = useSelector((state) => state.user); // Get userInfo from Redux store
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const { userInfo } = useSelector((state) => state.user); 
 
     const navItems = [
       { href: "/home/news/tin-tuc", label: "Tin Tức" },
@@ -107,15 +107,22 @@
                 <div className="relative">
                   <button
                     className="bg-[#ff9800] text-white px-12 py-3 rounded text-lg font-bold hover:bg-[#e58a00] transition"
-                    onClick={() => setDropdownOpen(!isDropdownOpen)} // Toggle dropdown
+                    onClick={() => setDropdownOpen(!isDropdownOpen)}
                   >
                     {userInfo.username}
                   </button>
-
-                  {/* Dropdown Menu */}
                   {isDropdownOpen && (
                     <div className="absolute right-0 bg-[#2a3552] text-white rounded-lg shadow-lg mt-2 w-48 z-10">
                       <ul className="space-y-2 p-2">
+                        <li>
+                          <Link
+                            to="/home/user"
+                            className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            Thông tin
+                          </Link>
+                        </li>
                         <li>
                           <Link
                             to="/home/nap-tien"
@@ -129,16 +136,9 @@
                           <Link
                             to="/home/user"
                             className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
-                            onClick={() => setDropdownOpen(false)}
-                          >
-                            Thông Tin
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/home/gift-code"
-                            className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
-                            onClick={() => setDropdownOpen(false)}
+                            onClick={() => {
+                              localStorage.setItem('selectedUserOption', 'GiftCode');
+                            }}
                           >
                             GiftCode
                           </Link>
