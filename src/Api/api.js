@@ -36,10 +36,30 @@ const api = {
   getUserInfo: () =>
     axios.get(`${BASE_URL}/api/profile`, {
       headers: {
-        token: localStorage.getItem("token"), // Đảm bảo token được gửi đúng key
+        token: localStorage.getItem("token"),
       },
     }).then((response) => response.data),  
   
+  changePassword: (currentPassword, newPassword) =>
+    axios.patch(
+      `${BASE_URL}/api/profile`,
+      { currentPassword, newPassword },
+      {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      }
+    ).then((response) => response.data),
+  changeEmail: (newEmail) =>
+    axios.patch(
+      `${BASE_URL}/api/profile`,
+      { email: newEmail },
+      {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      }
+    ).then((response) => response.data),
 };
 
 export default api;
