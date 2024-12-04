@@ -134,17 +134,6 @@
                         </li>
                         <li>
                           <Link
-                            to="/home/user"
-                            className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
-                            onClick={() => {
-                              localStorage.setItem('selectedUserOption', 'GiftCode');
-                            }}
-                          >
-                            GiftCode
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
                             to="/home/gio-hang"
                             className="block py-2 px-4 hover:bg-[#3d4b6b] rounded-lg"
                             onClick={() => setDropdownOpen(false)}

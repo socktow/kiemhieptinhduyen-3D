@@ -1,98 +1,83 @@
-import React, { useState, useEffect } from "react";
-import { message } from "antd";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import api from "../../../Api/api";
+import { useNavigate } from "react-router-dom";
 
 const ChangeEmail = () => {
+  const navigate = useNavigate();
+  const { userInfo } = useSelector((state) => state.user);
+
   const [formData, setFormData] = useState({
-    newEmail: "",
     verificationCode: "",
+    newEmail: "",
   });
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await api.getUserInfo();
-        setUserInfo(response.user);
-      } catch (error) {
-        message.error("Không thể lấy thông tin người dùng");
-      }
-    };
-    fetchUserInfo();
-  }, []);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleGetCode = async () => {
+  const handleGetCode = () => {
     setLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      message.success("Mã xác nhận đã được gửi");
-      setStep(2);
-    } catch (error) {
-      message.error("Có lỗi xảy ra khi gửi mã");
-    } finally {
+    setError("");
+    setTimeout(() => {
       setLoading(false);
-    }
+      setStep(2);
+      setSuccessMessage("Mã xác nhận đã được gửi đến email của bạn (123456).");
+    }, 1000);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (step === 2) {
-      if (!formData.verificationCode || !formData.newEmail) {
-        message.error("Vui lòng điền đầy đủ thông tin");
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError("");
+    setSuccessMessage("");
+    const { verificationCode, newEmail } = formData;
+
+    setTimeout(async () => {
+      setLoading(false);
+      if (verificationCode !== "123456") {
+        setError("Mã xác nhận không đúng. Vui lòng thử lại.");
         return;
       }
 
-      if (formData.verificationCode !== "123456") {
-        message.error("Mã xác nhận không đúng");
+      if (!newEmail.includes("@") || newEmail.length < 5) {
+        setError("Vui lòng nhập email hợp lệ.");
         return;
       }
 
-      if (formData.newEmail === userInfo?.email) {
-        message.error("Email mới phải khác email hiện tại");
-        return;
-      }
-
-      setLoading(true);
       try {
-        const response = await api.changeEmail(formData.newEmail);
-        if (response.message) {
-          message.success("Thay đổi email thành công");
-          // Reset form và cập nhật userInfo
-          setFormData({
-            newEmail: "",
-            verificationCode: "",
-          });
-          setStep(1);
-          // Cập nhật lại userInfo để hiển thị email mới
-          const updatedUserInfo = await api.getUserInfo();
-          setUserInfo(updatedUserInfo.user);
-        }
-      } catch (error) {
-        message.error(error.response?.data?.message || "Có lỗi xảy ra khi thay đổi email");
-      } finally {
-        setLoading(false);
+        // Gọi API đổi email
+        await api.changeEmail(newEmail);
+        setSuccessMessage("Email đã được thay đổi thành công!");
+        setTimeout(() => {
+          // Chuyển hướng và refresh
+          navigate("/home/user");
+          window.location.reload();
+        }, 1500);
+      } catch (err) {
+        setError("Đã xảy ra lỗi khi thay đổi email. Vui lòng thử lại.");
       }
-    }
+    }, 1000);
   };
 
   return (
     <div className="max-w-md mx-auto bg-white p-8 rounded shadow-md">
       <h2 className="text-2xl font-bold mb-5 text-center text-gray-800">Thay Đổi Email</h2>
-      
+
+      {successMessage && (
+        <div className="mb-4 text-green-600 font-medium text-center">{successMessage}</div>
+      )}
+
+      {error && (
+        <div className="mb-4 text-red-600 font-medium text-center">{error}</div>
+      )}
+
       <div className="mb-6">
-        <label className="block text-gray-600 font-medium mb-2">
-          Email hiện tại
-        </label>
+        <label className="block text-gray-600 font-medium mb-2">Email hiện tại</label>
         <input
           type="email"
           value={userInfo?.email || ""}
@@ -101,7 +86,7 @@ const ChangeEmail = () => {
         />
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-4">
         {step === 1 && (
           <div>
             <button
@@ -149,7 +134,8 @@ const ChangeEmail = () => {
 
             <div>
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={loading}
                 className={`w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 
                   focus:outline-none focus:ring-2 focus:ring-blue-500 

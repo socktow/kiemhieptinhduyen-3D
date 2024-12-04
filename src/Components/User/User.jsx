@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ChangePassword from './tinhang/ChangePassword';
 import ChangeEmail from './tinhang/ChangeEmail';
 import Giftcode from './tinhang/Giftcode';
 import InfoUser from './tinhang/InfoUser';
 import MocNap from './tinhang/MocNap';
-import Api from '../../Api/api'
-import CuaHang from './tinhang/CuaHang';
+import DoiKNB from './tinhang/DoiKNB';
 
 const User = () => {
+  const { userInfo } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState(() => {
     const savedOption = localStorage.getItem('selectedUserOption');
@@ -21,22 +22,10 @@ const User = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await Api.getUserInfo();
-        if (!response) {
-          navigate('/home/login');
-        }
-      } catch (error) {
-        if (error.response?.status === 401) {
-          localStorage.removeItem('token');
-          navigate('/home/login');
-        }
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
+    if (!userInfo) {
+      navigate('/home/login');
+    }
+  }, [userInfo, navigate]);
 
   const handleOptionClick = (option, e) => {
     if (e) {
@@ -49,7 +38,7 @@ const User = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 mt-28 md:mt-28">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-full lg:w-1/4 bg-gray-800 text-white p-5">
         <h2 className="text-4xl font-bold mb-5">Trang User</h2>
@@ -86,16 +75,16 @@ const User = () => {
             GiftCode
           </li>
           <li
-            className={`text-2xl  cursor-pointer p-2 mb-2 hover:bg-gray-700 rounded ${selectedOption === "Mốc Nạp" ? 'bg-gray-600' : ''}`}
+            className={`text-2xl cursor-pointer p-2 mb-2 hover:bg-gray-700 rounded ${selectedOption === "Đổi KNB" ? 'bg-gray-600' : ''}`}
+            onClick={() => handleOptionClick("Đổi KNB")}
+          >
+            Đổi KNB
+          </li>
+          <li
+            className={`text-2xl cursor-pointer p-2 mb-2 hover:bg-gray-700 rounded ${selectedOption === "Mốc Nạp" ? 'bg-gray-600' : ''}`}
             onClick={() => handleOptionClick("Mốc Nạp")}
           >
             Mốc Nạp
-          </li>
-          <li
-            className={`text-2xl  cursor-pointer p-2 mb-2 hover:bg-gray-700 rounded ${selectedOption === "Cửa Hàng" ? 'bg-gray-600' : ''}`}
-            onClick={() => handleOptionClick("Cửa Hàng")}
-          >
-            Cửa Hàng
           </li>
         </ul>
       </div>
@@ -107,12 +96,12 @@ const User = () => {
           {selectedOption === "Thay Đổi Password" && <ChangePassword />}
           {selectedOption === "Thay Đổi Email" && <ChangeEmail />}
           {selectedOption === "Mốc Nạp" && <MocNap />}
+          {selectedOption === "Đổi KNB" && <DoiKNB />}
           {selectedOption === "GiftCode" && <Giftcode />}
-          {selectedOption === "Cửa Hàng" && <CuaHang />}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default User;

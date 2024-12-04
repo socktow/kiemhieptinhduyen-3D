@@ -6,7 +6,11 @@ const Hero = ({ children }) => {
   return (
     <div
       className="relative w-full bg-no-repeat "
-      style={{ backgroundImage: `url(${background})`, height: "5002px" }}
+      style={{
+        backgroundImage: `url(${background})`,
+        height: "4800px",
+        backgroundPosition: "center -120px",
+      }}
     >
       <img
         src={imgslogan}
