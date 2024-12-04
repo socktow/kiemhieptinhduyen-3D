@@ -9,7 +9,6 @@ import MainLayout from "./Layouts/MainLayout/Index";
 import EventLayout from "./Layouts/EventLayout/Index";
 import Login from "./Pages/LoginSignup";
 import PageCateGory from "./Pages/PageCateGory";
-import PageContent from "./Pages/PageContent";
 import ImgContentPage from "./Assets/img-bg-news-top.jpg";
 import User from "./Components/User/User";
 import Naptien from "./Components/NapTien/Naptien";
@@ -64,7 +63,6 @@ function App() {
             path="news/huong-dan"
             element={<PageCateGory banner={ImgContentPage} category="huong-dan" />}
           />
-          <Route path="news/:category/:title" element={<PageContent />} />
         </Route>
 
         {/* Admin */}

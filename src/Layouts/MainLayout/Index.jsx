@@ -4,8 +4,8 @@ import Navbar from "../../Components/Navbar/Navbar";
 
 const MainLayout = () => {
   return (
-    <div className="relative h-screen">
-      <div className="sticky left-0 w-full z-50 bg-opacity-80 backdrop-blur-md">
+    <div className="relativen">
+      <div className="relative left-0 w-full z-50 bg-opacity-80 backdrop-blur-md">
         <Navbar />
       </div>
         <Outlet />

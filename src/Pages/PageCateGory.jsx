@@ -1,71 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React from "react";
+import { Link } from "react-router-dom";
+import demohuongdan from "../Assets/thum-huong-dan.jpg"
 const PageCateGory = ({ banner, category }) => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const navigate = useNavigate(); // Hook for navigation
+  const topics = [
+    {
+      id: 1,
+      avatar: demohuongdan,
+      title: "Hướng Dẫn Nhập Code",
+      date: "01/12/2024",
+    },
+    {
+      id: 2,
+      avatar: "https://via.placeholder.com/200",
+      title: "Bài viết thứ hai",
+      date: "02/12/2024",
+    },
+  ];
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('https://fakestoreapi.com/products');
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  const categories = [
+    { name: "Tin Tức", path: "/home/news/tin-tuc" },
+    { name: "Sự Kiện", path: "/home/news/su-kien" },
+    { name: "Tính Năng", path: "/home/news/tinh-nang" },
+    { name: "Hướng Dẫn", path: "/home/news/huong-dan" },
+  ];
 
-  useEffect(() => {
-    if (category) {
-      const filterKey =
-        category === 'menclother' ? "men's clothing" : "women's clothing";
-      setFilteredProducts(products.filter((item) => item.category === filterKey));
-    }
-  }, [category, products]);
-
-  const handleProductClick = (title) => {
-    const formattedTitle = title.replace(/ /g, '-');  // Thay tất cả khoảng trắng bằng dấu gạch nối
-    navigate(`/news/${category}/${formattedTitle}`); // Chuyển hướng đến trang chi tiết sản phẩm
-  };
-  
   return (
-    <div className="p-4">
-      {banner && (
-        <div className="mb-6">
-          <img
-            src={banner}
-            alt="Banner"
-            className="w-full h-48 object-cover rounded-lg shadow-md"
-          />
-        </div>
-      )}
-
-      <div>
-        <h2 className="text-2xl font-bold mb-4">
-          {category === 'menclother' ? "Men's Clothing" : "Women's Clothing"}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="border rounded-lg shadow-md p-4 flex flex-col items-center cursor-pointer"
-              onClick={() => handleProductClick(product.title)} // Handle click event
+    <div className="page-category">
+      <div
+        className="banner h-72 bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url(${banner})`,
+        }}
+      >
+      </div>
+        <div className="header text-5xl py-10 px-12 flex gap-x-16 justify-center">
+          {categories.map((cat) => (
+            <Link
+              key={cat.name}
+              to={cat.path}
+              className="text-blue-600 hover:underline font-semibold"
             >
-              <img
-                src={product.image}
-                alt={product.title}
-                className="h-40 w-40 object-contain mb-4"
-              />
-              <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
-              <p className="text-gray-600 mb-2">${product.price}</p>
-              <p className="text-sm text-gray-500">{product.description}</p>
-            </div>
+              {cat.name}
+            </Link>
           ))}
         </div>
+
+      {/* Topics Section */}
+      <div className="content max-w-7xl mx-auto p-5 space-y-4">
+        {topics.map((topic) => (
+          <div
+            key={topic.id}
+            className="topic-item flex bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
+            style={{ height: "100px" }}
+          >
+            {/* Avatar */}
+            <div className="avatar w-auto h-auto">
+              <img
+                src={topic.avatar}
+                alt={topic.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="content flex-auto p-4 flex flex-col justify-between relative group">
+              <div>
+                <h2 className="text-xl font-bold text-gray-800">{topic.title}</h2>
+                <p className="text-sm text-gray-600 mt-2">{topic.date}</p>
+              </div>
+
+              {/* View Article Button */}
+              <Link
+                to={`/news/${category}/${topic.id}`}
+                className="absolute bottom-4 right-4 bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                Xem bài viết
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
