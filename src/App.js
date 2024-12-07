@@ -13,10 +13,12 @@ import ImgContentPage from "./Assets/img-bg-news-top.jpg";
 import User from "./Components/User/User";
 import Naptien from "./Components/NapTien/Naptien";
 import AdminLayout from "./Layouts/AdminLayout/Index";
-import DashBoard from "./Layouts/AdminLayout/DashBoard/Index";
 
 // Redux
 import { fetchUserInfo } from "./Redux/UserSlice";
+import PostCreate from "./Layouts/AdminLayout/BaiViet/PostCreate";
+import PostList from "./Layouts/AdminLayout/BaiViet/PostList";
+import Upload from "./Layouts/AdminLayout/BaiViet/Upload";
 
 function App() {
   const [isEventActive] = React.useState(false);
@@ -67,8 +69,9 @@ function App() {
 
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<DashBoard />} />
-          <Route path="dashboard" element={<DashBoard />} />
+          <Route path="posts/create" element={<PostCreate />} />
+          <Route path="posts/list" element={<PostList />} />
+          <Route path="posts/upload" element={<Upload />} />
         </Route>
       </Routes>
     </Router>
