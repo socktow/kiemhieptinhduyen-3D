@@ -35,7 +35,7 @@ const Upload = () => {
     };
   
     return (
-      <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <div className="min-h-svh mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-center mb-6">Upload Image</h2>
   
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}

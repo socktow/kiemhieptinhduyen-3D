@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/charts": "^2.1.1",
-    "@ant-design/icons": "^5.3.7",
+    "@ant-design/icons": "^5.5.2",
     "@ant-design/pro-components": "^2.7.1",
     "@ant-design/pro-form": "^2.25.1",
     "@babel/plugin-proposal-private-property-in-object": "^7.14.5",

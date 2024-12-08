@@ -2,7 +2,6 @@ import React from "react";
 import Navbar from "./Navbar";
 import Slidebar from "./Slidebar";
 import { Outlet } from "react-router-dom";
-
 const AdminLayout = () => {
   return (
     <div className="flex h-screen bg-white">
