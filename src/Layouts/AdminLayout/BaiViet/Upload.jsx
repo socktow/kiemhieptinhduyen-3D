@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../../../Api/Admin/api'; // Adjust import if necessary
+import api from '../_Api/api';
 
 const Upload = () => {
     const [image, setImage] = useState(null);
