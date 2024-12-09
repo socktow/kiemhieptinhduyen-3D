@@ -1,8 +1,6 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:4000";
-
-// Chỉnh sửa apiCall để hỗ trợ upload file
 const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
   try {
     const token = localStorage.getItem("token");
@@ -18,15 +16,13 @@ const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
     };
     let response;
     if (method === "POST") {
-      response = isFormData
-        ? await axios.post(`${BASE_URL}/${endpoint}`, data, config) 
-        : await axios.post(`${BASE_URL}/${endpoint}`, data, { headers });
+      response = await axios.post(`${BASE_URL}/${endpoint}`, data, config);
     } else {
       response = await axios.get(`${BASE_URL}/${endpoint}`, { headers });
     }
     return response.data;
   } catch (error) {
-    console.error(`Error with ${endpoint}:`, error);
+    console.error(`Error with ${endpoint}:`, error.response?.data || error.message);
     throw error;
   }
 };
@@ -39,6 +35,7 @@ const api = {
   },
   createArticle: (articleData) => apiCall("admin/create-article", articleData),
   getArticles: () => apiCall("admin/articles", {}, "GET"),
+
 };
 
 export default api;

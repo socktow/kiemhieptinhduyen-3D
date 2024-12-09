@@ -92,6 +92,7 @@ function App() {
 
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<PostCreate />} />
           {/* Bài Viết */}
           <Route path="posts/create" element={<PostCreate />} />
           <Route path="posts/list" element={<PostList />} />
