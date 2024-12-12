@@ -1,6 +1,6 @@
 import axios from "axios";
+const BASE_URL = "https://kiemhieptinhduyen.cloud";
 
-const BASE_URL = "http://localhost:4000";
 const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
   try {
     const token = localStorage.getItem("token");
@@ -17,8 +17,12 @@ const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
     let response;
     if (method === "POST") {
       response = await axios.post(`${BASE_URL}/${endpoint}`, data, config);
-    } else {
+    } else if (method === "GET") {
       response = await axios.get(`${BASE_URL}/${endpoint}`, { headers });
+    } else if (method === "PATCH") {
+      response = await axios.patch(`${BASE_URL}/${endpoint}`, data, config);
+    } else if (method === "DELETE") {
+      response = await axios.delete(`${BASE_URL}/${endpoint}`, { headers });
     }
     return response.data;
   } catch (error) {
@@ -35,7 +39,11 @@ const api = {
   },
   createArticle: (articleData) => apiCall("admin/create-article", articleData),
   getArticles: () => apiCall("admin/articles", {}, "GET"),
-
+  getAllUsers: () => apiCall("admin/users", {}, "GET"),
+  getUserById: (userId) => apiCall(`admin/user/${userId}`, {}, "GET"),
+  updateUser: (userId, updateData) => apiCall(`admin/user/${userId}`, updateData, "PATCH"),
+  deleteUser: (userId) => apiCall(`admin/user/${userId}`, {}, "DELETE"),
+  AddAccount: () => apiCall("admin/add-account", {}, "POST"),
 };
 
 export default api;
