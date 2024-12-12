@@ -44,7 +44,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

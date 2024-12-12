@@ -23,7 +23,6 @@ import AdminLayout from "./Layouts/AdminLayout/Index";
 import PostCreate from "./Layouts/AdminLayout/BaiViet/PostCreate";
 import PostList from "./Layouts/AdminLayout/BaiViet/PostList";
 import Upload from "./Layouts/AdminLayout/BaiViet/Upload";
-import AddAccount from "./Layouts/AdminLayout/Account/AddAccount";
 import AccountCRUD from "./Layouts/AdminLayout/Account/AccountCRUD";
 import AddCoin from "./Layouts/AdminLayout/Account/AddCoin";
 import GiftCodeCreate from "./Layouts/AdminLayout/GiftCode/GiftCodeCreate";
@@ -98,7 +97,6 @@ function App() {
           <Route path="posts/list" element={<PostList />} />
           <Route path="posts/upload" element={<Upload />} />
           {/* Quản Lý Tài KHoản  */}
-          <Route path="users/create" element={<AddAccount />} />
           <Route path="users/edit" element={<AccountCRUD />} />
           <Route path="users/add-credits" element={<AddCoin />} />
           {/* Quản Lý Giftcode */}

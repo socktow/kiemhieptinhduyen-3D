@@ -1,169 +1,139 @@
 import React, { useState } from "react";
+import { Form, Input, Button, DatePicker, Space, message } from "antd";
+import api from "../_Api/api";
 
 const GiftCodeCreate = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    code: "",
-    title: "",
-    content: "",
-    expiryDate: "",
-    items: [{ itemId: "", quantity: "" }],
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleItemChange = (index, e) => {
-    const { name, value } = e.target;
-    const updatedItems = [...formData.items];
-    updatedItems[index][name] = value;
-    setFormData((prev) => ({ ...prev, items: updatedItems }));
-  };
-
+  const [form] = Form.useForm();
+  const [items, setItems] = useState([]);
   const addItem = () => {
-    setFormData((prev) => ({
-      ...prev,
-      items: [...prev.items, { itemId: "", quantity: "" }],
-    }));
+    setItems([...items, { itemId: "", quantity: "" }]);
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    alert("GiftCode đã được tạo!");
-    // Logic để gửi dữ liệu đến API sẽ được thêm sau
+  const removeItem = (index) => {
+    setItems(items.filter((_, idx) => idx !== index));
   };
+  const handleItemChange = (index, field, value) => {
+    const updatedItems = [...items];
+    updatedItems[index][field] = value;
+    setItems(updatedItems);
+  };
+  const onFinish = async (values) => {
+    try {
+      const { name, code, title, usage, content, expiryDate } = values;
+      const payload = {
+        name,
+        code,
+        title,
+        usage: parseInt(usage, 10),
+        content,
+        expiryDate: expiryDate.toISOString(),
+        items: Array.isArray(items)
+          ? items.map((item) => ({
+              itemId: parseInt(item.itemId, 10),
+              quantity: parseInt(item.quantity, 10),
+            }))
+          : [],
+      };
+  
+      await api.taoGiftcode(payload);
+      message.success("Giftcode created successfully!");
+      form.resetFields();
+      setItems([]);
+    } catch (error) {
+      message.error(error.response?.data?.message || "Failed to create giftcode");
+    }
+  };  
 
   return (
-    <div className="min-screen bg-gray-100 p-6 flex items-center justify-center">
-      <div className="w-full max-w-auto bg-white p-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">Tạo GiftCode</h2>
-        <form onSubmit={handleSubmit}>
-          {/* Tên GiftCode */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Tên GiftCode
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Nhập tên GiftCode"
-              className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+      <h2>Create GiftCode</h2>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form.Item
+          name="name"
+          label="Name"
+          rules={[{ required: true, message: "Please enter the name" }]}
+        >
+          <Input placeholder="Giftcode Name" />
+        </Form.Item>
 
-          {/* Mã Code */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Mã Code
-            </label>
-            <input
-              type="text"
-              name="code"
-              value={formData.code}
-              onChange={handleChange}
-              placeholder="Nhập mã code"
-              className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+        <Form.Item
+          name="code"
+          label="Code"
+          rules={[{ required: true, message: "Please enter the code" }]}
+        >
+          <Input placeholder="Giftcode Code" />
+        </Form.Item>
 
-          {/* Title */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Tiêu Đề
-            </label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Nhập tiêu đề"
-              className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true, message: "Please enter the title" }]}
+        >
+          <Input placeholder="Giftcode Title" />
+        </Form.Item>
 
-          {/* Content */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Nội Dung
-            </label>
-            <textarea
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-              placeholder="Nhập nội dung"
-              className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            ></textarea>
-          </div>
+        <Form.Item
+          name="content"
+          label="Content"
+          rules={[{ required: true, message: "Please enter the content" }]}
+        >
+          <Input.TextArea placeholder="Giftcode Content" rows={4} />
+        </Form.Item>
 
-          {/* Ngày hết hạn */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Ngày Hết Hạn
-            </label>
-            <input
-              type="date"
-              name="expiryDate"
-              value={formData.expiryDate}
-              onChange={handleChange}
-              className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+        <Form.Item
+          name="usage"
+          label="Usage"
+          rules={[{ required: true, message: "Please enter the usage count" }]}
+        >
+          <Input type="number" placeholder="Usage Count" />
+        </Form.Item>
 
-          {/* Danh sách Items */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Danh Sách Items
-            </label>
-            {formData.items.map((item, index) => (
-              <div key={index} className="flex space-x-4 mt-2">
-                <input
-                  type="number"
-                  name="itemId"
-                  value={item.itemId}
-                  onChange={(e) => handleItemChange(index, e)}
-                  placeholder="ID Item"
-                  className="w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <input
-                  type="number"
-                  name="quantity"
-                  value={item.quantity}
-                  onChange={(e) => handleItemChange(index, e)}
-                  placeholder="Số lượng"
-                  className="w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addItem}
-              className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-            >
-              Thêm Item
-            </button>
-          </div>
+        <Form.Item
+          name="expiryDate"
+          label="Expiry Date"
+          rules={[{ required: true, message: "Please select the expiry date" }]}
+        >
+          <DatePicker showTime style={{ width: "100%" }} />
+        </Form.Item>
 
-          {/* Nút Tạo */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              Tạo GiftCode
-            </button>
-          </div>
-        </form>
-      </div>
+        <div>
+          <h4>Items</h4>
+          {items.map((item, index) => (
+            <Space key={index} style={{ marginBottom: "10px" }}>
+              <Input
+                placeholder="Item ID"
+                value={item.itemId}
+                onChange={(e) =>
+                  handleItemChange(index, "itemId", e.target.value)
+                }
+              />
+              <Input
+                placeholder="Quantity"
+                type="number"
+                value={item.quantity}
+                onChange={(e) =>
+                  handleItemChange(index, "quantity", e.target.value)
+                }
+              />
+              <Button type="danger" onClick={() => removeItem(index)}>
+                Remove
+              </Button>
+            </Space>
+          ))}
+          <Button type="dashed" onClick={addItem} style={{ marginTop: "10px" }}>
+            Add Item
+          </Button>
+        </div>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginTop: "20px" }}
+          >
+            Create Giftcode
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

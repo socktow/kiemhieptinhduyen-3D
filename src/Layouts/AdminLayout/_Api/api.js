@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "https://kiemhieptinhduyen.cloud";
+const BASE_URL = "http://localhost:4000";
 
 const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
   try {
@@ -44,6 +44,8 @@ const api = {
   updateUser: (userId, updateData) => apiCall(`admin/user/${userId}`, updateData, "PATCH"),
   deleteUser: (userId) => apiCall(`admin/user/${userId}`, {}, "DELETE"),
   AddAccount: () => apiCall("admin/add-account", {}, "POST"),
+  getGiftcodes: () => apiCall("admin/giftcode", {}, "GET"),
+  taoGiftcode: () => apiCall("admin/create-giftcode", {}, "POST"),
 };
 
 export default api;

@@ -65,6 +65,7 @@ const AccountCRUD = () => {
         )
       );
       setEditingUser(null);
+      setUserDetails(null); // Clear userDetails after saving changes
     } catch {
       setError("Failed to update user.");
     }
@@ -82,8 +83,9 @@ const AccountCRUD = () => {
   };
 
   const handleEditClick = (user) => {
-    setEditingUser(user.userid);
+    setUserId(user.userid); // Set the user ID to be used for fetching details
     setEditForm({ ...user });
+    setEditingUser(user.userid); // Set the user ID that is being edited
   };
 
   return (
@@ -116,100 +118,19 @@ const AccountCRUD = () => {
                 <tr key={user.userid} className="border-b">
                   <td className="px-4 py-2 text-center">{user.userid}</td>
                   <td className="px-4 py-2">{user.username}</td>
-                  <td className="px-4 py-2">
-                    {editingUser === user.userid ? (
-                      <input
-                        type="text"
-                        name="email"
-                        value={editForm.email || ""}
-                        onChange={handleEditChange}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      user.email
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editingUser === user.userid ? (
-                      <input
-                        type="text"
-                        name="password"
-                        value={editForm.password || ""}
-                        onChange={handleEditChange}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      user.password
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editingUser === user.userid ? (
-                      <input
-                        type="text"
-                        name="gameId"
-                        value={editForm.gameId || ""}
-                        onChange={handleEditChange}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      user.gameId
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editingUser === user.userid ? (
-                      <input
-                        type="text"
-                        name="Cash"
-                        value={editForm.Cash || ""}
-                        onChange={handleEditChange}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      user.Cash
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editingUser === user.userid ? (
-                      <input
-                        type="text"
-                        name="CashFree"
-                        value={editForm.CashFree || ""}
-                        onChange={handleEditChange}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      user.CashFree
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editingUser === user.userid ? (
-                      <input
-                        type="text"
-                        name="MocNap"
-                        value={editForm.MocNap || ""}
-                        onChange={handleEditChange}
-                        className="border border-gray-300 rounded px-2 py-1"
-                      />
-                    ) : (
-                      user.MocNap
-                    )}
-                  </td>
+                  <td className="px-4 py-2">{user.email}</td>
+                  <td className="px-4 py-2">{user.password}</td>
+                  <td className="px-4 py-2">{user.gameId}</td>
+                  <td className="px-4 py-2">{user.Cash}</td>
+                  <td className="px-4 py-2">{user.CashFree}</td>
+                  <td className="px-4 py-2">{user.MocNap}</td>
                   <td className="px-4 py-2 flex justify-center gap-2">
-                    {editingUser === user.userid ? (
-                      <button
-                        className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                        onClick={handleEditSubmit}
-                      >
-                        Save
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                        onClick={() => handleEditClick(user)}
-                      >
-                        Edit
-                      </button>
-                    )}
+                    <button
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                      onClick={() => handleEditClick(user)}
+                    >
+                      Edit
+                    </button>
                     <button
                       className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                       onClick={() => handleDeleteClick(user.userid)}
@@ -225,7 +146,7 @@ const AccountCRUD = () => {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Get User By ID</h2>
+        <h2 className="flex sm:flex-col gap-4 mb-4">Get User By ID</h2>
         <div className="flex gap-4 mb-4">
           <input
             type="text"
@@ -256,9 +177,66 @@ const AccountCRUD = () => {
               Game ID: {userDetails.gameId || "N/A"}
             </p>
             <p className="text-gray-700">Mốc Nạp: {userDetails.MocNap}</p>
+            <h3 className="text-xl mt-4">Edit User Details</h3>
+            <div>
+              <input
+                type="text"
+                name="email"
+                value={editForm.email || userDetails.email}
+                onChange={handleEditChange}
+                className="border border-gray-300 rounded px-2 py-1 mb-2"
+                placeholder="Edit Email"
+              />
+              <input
+                type="text"
+                name="password"
+                value={editForm.password || userDetails.password}
+                onChange={handleEditChange}
+                className="border border-gray-300 rounded px-2 py-1 mb-2"
+                placeholder="Edit Password"
+              />
+              <input
+                type="text"
+                name="gameId"
+                value={editForm.gameId || userDetails.gameId}
+                onChange={handleEditChange}
+                className="border border-gray-300 rounded px-2 py-1 mb-2"
+                placeholder="Edit Game ID"
+              />
+              <input
+                type="text"
+                name="Cash"
+                value={editForm.Cash || userDetails.Cash}
+                onChange={handleEditChange}
+                className="border border-gray-300 rounded px-2 py-1 mb-2"
+                placeholder="Edit Cash"
+              />
+              <input
+                type="text"
+                name="CashFree"
+                value={editForm.CashFree || userDetails.CashFree}
+                onChange={handleEditChange}
+                className="border border-gray-300 rounded px-2 py-1 mb-2"
+                placeholder="Edit Cash Free"
+              />
+              <input
+                type="text"
+                name="MocNap"
+                value={editForm.MocNap || userDetails.MocNap}
+                onChange={handleEditChange}
+                className="border border-gray-300 rounded px-2 py-1 mb-2"
+                placeholder="Edit Mốc Nạp"
+              />
+              <button
+                onClick={handleEditSubmit}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600"
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         ) : (
-          <p className="text-gray-600">Enter a User ID to view details.</p>
+          <p>No user found</p>
         )}
       </div>
     </div>

@@ -25,7 +25,6 @@ const Slidebar = () => {
       path: "/admin/users",
       icon: <UserOutlined />, // Icon cho mục "Quản Lý Tài Khoản"
       subMenu: [
-        { title: "Thêm Tài Khoản", path: "/admin/users/create", icon: <PlusCircleOutlined /> },
         { title: "Chỉnh Sửa Tài Khoản", path: "/admin/users/edit", icon: <EditOutlined /> },
         { title: "Cộng Xu Tài Khoản", path: "/admin/users/add-credits", icon: <GiftOutlined /> },
       ],
