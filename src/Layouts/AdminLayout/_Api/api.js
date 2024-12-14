@@ -1,35 +1,4 @@
-import axios from "axios";
-const BASE_URL = "http://localhost:4000";
-
-const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (token) {
-      headers["token"] = token;
-    }
-    const isFormData = data instanceof FormData;
-    const config = {
-      headers: {
-        ...headers,
-        ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
-      },
-    };
-    let response;
-    if (method === "POST") {
-      response = await axios.post(`${BASE_URL}/${endpoint}`, data, config);
-    } else if (method === "GET") {
-      response = await axios.get(`${BASE_URL}/${endpoint}`, { headers });
-    } else if (method === "PATCH") {
-      response = await axios.patch(`${BASE_URL}/${endpoint}`, data, config);
-    } else if (method === "DELETE") {
-      response = await axios.delete(`${BASE_URL}/${endpoint}`, { headers });
-    }
-    return response.data;
-  } catch (error) {
-    console.error(`Error with ${endpoint}:`, error.response?.data || error.message);
-    throw error;
-  }
-};
+import apiCall from "./apiCall";
 
 const api = {
   uploadImage: (image) => {
@@ -45,7 +14,7 @@ const api = {
   deleteUser: (userId) => apiCall(`admin/user/${userId}`, {}, "DELETE"),
   AddAccount: () => apiCall("admin/add-account", {}, "POST"),
   getGiftcodes: () => apiCall("admin/giftcode", {}, "GET"),
-  taoGiftcode: () => apiCall("admin/create-giftcode", {}, "POST"),
+  taoGiftcode: (giftcodeData) => apiCall("admin/create-giftcode", giftcodeData, "POST"),
 };
 
 export default api;

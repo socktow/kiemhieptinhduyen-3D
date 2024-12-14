@@ -1,141 +1,190 @@
 import React, { useState } from "react";
-import { Form, Input, Button, DatePicker, Space, message } from "antd";
 import api from "../_Api/api";
 
-const GiftCodeCreate = () => {
-  const [form] = Form.useForm();
-  const [items, setItems] = useState([]);
-  const addItem = () => {
-    setItems([...items, { itemId: "", quantity: "" }]);
+const GiftcodeForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    code: "",
+    items: [{ itemId: "", quantity: "" }],
+    title: "",
+    content: "",
+    usage: "",
+    expiryDate: "",
+  });
+
+  const handleInputChange = (field, value) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
   };
-  const removeItem = (index) => {
-    setItems(items.filter((_, idx) => idx !== index));
-  };
+
   const handleItemChange = (index, field, value) => {
-    const updatedItems = [...items];
+    const updatedItems = [...formData.items];
     updatedItems[index][field] = value;
-    setItems(updatedItems);
+    setFormData({ ...formData, items: updatedItems });
   };
-  const onFinish = async (values) => {
+
+  const addItem = () => {
+    setFormData((prevState) => ({
+      ...prevState,
+      items: [...prevState.items, { itemId: "", quantity: "" }],
+    }));
+  };
+
+  const removeItem = (index) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      items: prevState.items.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formattedData = {
+      name: formData.name,
+      code: formData.code,
+      title: formData.title,
+      content: formData.content,
+      usage: parseInt(formData.usage),
+      items: formData.items.map((item) => ({
+        itemId: item.itemId,
+        quantity: parseInt(item.quantity),
+      })),
+      expiryDate: formData.expiryDate,
+    };
     try {
-      const { name, code, title, usage, content, expiryDate } = values;
-      const payload = {
-        name,
-        code,
-        title,
-        usage: parseInt(usage, 10),
-        content,
-        expiryDate: expiryDate.toISOString(),
-        items: Array.isArray(items)
-          ? items.map((item) => ({
-              itemId: parseInt(item.itemId, 10),
-              quantity: parseInt(item.quantity, 10),
-            }))
-          : [],
-      };
-  
-      await api.taoGiftcode(payload);
-      message.success("Giftcode created successfully!");
-      form.resetFields();
-      setItems([]);
+      const response = await api.taoGiftcode(formattedData);
+      console.log("Giftcode created successfully:", response);
+      alert("Giftcode created successfully!");
     } catch (error) {
-      message.error(error.response?.data?.message || "Failed to create giftcode");
+      console.error("Error creating giftcode:", error);
+      alert("Failed to create giftcode");
     }
   };  
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <h2>Create GiftCode</h2>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: "Please enter the name" }]}
-        >
-          <Input placeholder="Giftcode Name" />
-        </Form.Item>
+    <form onSubmit={handleSubmit} className="p-4 bg-white shadow rounded-md">
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Name</label>
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => handleInputChange("name", e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
 
-        <Form.Item
-          name="code"
-          label="Code"
-          rules={[{ required: true, message: "Please enter the code" }]}
-        >
-          <Input placeholder="Giftcode Code" />
-        </Form.Item>
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Code</label>
+        <input
+          type="text"
+          value={formData.code}
+          onChange={(e) => handleInputChange("code", e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
 
-        <Form.Item
-          name="title"
-          label="Title"
-          rules={[{ required: true, message: "Please enter the title" }]}
-        >
-          <Input placeholder="Giftcode Title" />
-        </Form.Item>
-
-        <Form.Item
-          name="content"
-          label="Content"
-          rules={[{ required: true, message: "Please enter the content" }]}
-        >
-          <Input.TextArea placeholder="Giftcode Content" rows={4} />
-        </Form.Item>
-
-        <Form.Item
-          name="usage"
-          label="Usage"
-          rules={[{ required: true, message: "Please enter the usage count" }]}
-        >
-          <Input type="number" placeholder="Usage Count" />
-        </Form.Item>
-
-        <Form.Item
-          name="expiryDate"
-          label="Expiry Date"
-          rules={[{ required: true, message: "Please select the expiry date" }]}
-        >
-          <DatePicker showTime style={{ width: "100%" }} />
-        </Form.Item>
-
-        <div>
-          <h4>Items</h4>
-          {items.map((item, index) => (
-            <Space key={index} style={{ marginBottom: "10px" }}>
-              <Input
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Items</label>
+        {Array.isArray(formData.items) && formData.items.length > 0 ? (
+          formData.items.map((item, index) => (
+            <div key={index} className="flex items-center gap-4 mt-2">
+              <input
+                type="number"
                 placeholder="Item ID"
                 value={item.itemId}
                 onChange={(e) =>
                   handleItemChange(index, "itemId", e.target.value)
                 }
+                className="w-1/2 p-2 border border-gray-300 rounded-md"
+                required
               />
-              <Input
-                placeholder="Quantity"
+              <input
                 type="number"
+                placeholder="Quantity"
                 value={item.quantity}
                 onChange={(e) =>
                   handleItemChange(index, "quantity", e.target.value)
                 }
+                className="w-1/2 p-2 border border-gray-300 rounded-md"
+                required
               />
-              <Button type="danger" onClick={() => removeItem(index)}>
+              <button
+                type="button"
+                onClick={() => removeItem(index)}
+                className="p-2 bg-red-500 text-white rounded-md"
+              >
                 Remove
-              </Button>
-            </Space>
-          ))}
-          <Button type="dashed" onClick={addItem} style={{ marginTop: "10px" }}>
-            Add Item
-          </Button>
-        </div>
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">No items added yet.</p>
+        )}
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginTop: "20px" }}
-          >
-            Create Giftcode
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+        <button
+          type="button"
+          onClick={addItem}
+          className="mt-2 p-2 bg-blue-500 text-white rounded-md"
+        >
+          Add Item
+        </button>
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Title</label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => handleInputChange("title", e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Content</label>
+        <textarea
+          value={formData.content}
+          onChange={(e) => handleInputChange("content", e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          required
+        ></textarea>
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Usage</label>
+        <input
+          type="number"
+          value={formData.usage}
+          onChange={(e) => handleInputChange("usage", e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Expiry Date</label>
+        <input
+          type="date"
+          value={formData.expiryDate}
+          onChange={(e) => handleInputChange("expiryDate", e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="w-full p-2 bg-green-500 text-white rounded-md"
+      >
+        Submit
+      </button>
+    </form>
   );
 };
 
-export default GiftCodeCreate;
+export default GiftcodeForm;

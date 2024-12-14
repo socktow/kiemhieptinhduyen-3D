@@ -65,7 +65,7 @@ const AccountCRUD = () => {
         )
       );
       setEditingUser(null);
-      setUserDetails(null); // Clear userDetails after saving changes
+      setUserDetails(null); 
     } catch {
       setError("Failed to update user.");
     }
@@ -83,9 +83,9 @@ const AccountCRUD = () => {
   };
 
   const handleEditClick = (user) => {
-    setUserId(user.userid); // Set the user ID to be used for fetching details
+    setUserId(user.userid); 
     setEditForm({ ...user });
-    setEditingUser(user.userid); // Set the user ID that is being edited
+    setEditingUser(user.userid);
   };
 
   return (
