@@ -8,6 +8,7 @@ const InfoUser = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [gameId, setGameId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // Trạng thái đổi ID
 
   const handleLinkCharacter = async () => {
     if (!gameId.trim()) {
@@ -18,14 +19,19 @@ const InfoUser = ({ user }) => {
     setLoading(true);
     try {
       const response = await api.linkGameId(gameId);
-      if (response.success) {
-        message.success("Liên kết nhân vật thành công");
+      if (response.message === "GameID updated successfully") {
+        message.success(
+          isEditing
+            ? "Cập nhật GameID thành công"
+            : "Liên kết nhân vật thành công"
+        );
         setIsModalOpen(false);
-        // Cập nhật lại thông tin user sau khi liên kết
-        window.location.reload(); // Hoặc dispatch action để cập nhật userInfo
+        window.location.reload(); // Làm mới dữ liệu
       }
     } catch (error) {
-      message.error(error.response?.data?.message || "Có lỗi xảy ra khi liên kết nhân vật");
+      message.error(
+        error.response?.data?.message || "Có lỗi xảy ra khi xử lý GameID"
+      );
     } finally {
       setLoading(false);
     }
@@ -41,11 +47,29 @@ const InfoUser = ({ user }) => {
         </div>
         <div className="flex justify-between items-center">
           <span className="font-semibold">Nhân Vật:</span>
-          {userInfo?.GameId ? (
-            <span>{userInfo.GameId}</span>
+          {userInfo?.gameId ? (
+            <div className="flex items-center space-x-4">
+              <span>{userInfo.gameId}</span>
+              <button
+                onClick={() => {
+                  setIsEditing(true);
+                  setGameId(userInfo.gameId);
+                  setIsModalOpen(true);
+                }}
+                className="px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600
+                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50
+                  transition-colors duration-200"
+              >
+                Đổi ID
+              </button>
+            </div>
           ) : (
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setIsEditing(false);
+                setGameId("");
+                setIsModalOpen(true);
+              }}
               className="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 
                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 
                 transition-colors duration-200"
@@ -77,7 +101,7 @@ const InfoUser = ({ user }) => {
       </div>
 
       <Modal
-        title="Liên Kết Nhân Vật"
+        title={isEditing ? "Đổi GameID" : "Liên Kết Nhân Vật"}
         open={isModalOpen}
         onOk={handleLinkCharacter}
         onCancel={() => setIsModalOpen(false)}

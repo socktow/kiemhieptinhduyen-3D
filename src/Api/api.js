@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const BASE_URL = "https://kiemhieptinhduyen.cloud";
+const BASE_URL = "http://localhost:4000";
 
-// Hàm gọi API chung
-const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
+const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
   try {
-    const response =
-      method === "POST"
-        ? await axios.post(`${BASE_URL}/${endpoint}`, data, { headers })
-        : await axios.get(`${BASE_URL}/${endpoint}`, { headers });
+    const response = await axios({
+      url: `${BASE_URL}/${endpoint}`,
+      method,
+      data,
+      headers,
+    });
     return response.data;
   } catch (error) {
     console.error(`Error with ${endpoint}:`, error);
@@ -17,49 +18,32 @@ const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
 };
 
 const api = {
-  // Payment
-  createMomoPayment: (amount, orderInfo) =>
-    apiCall("momo/payment", { amount, orderInfo }),
-  checkMomoPayment: (orderId) =>
-    apiCall("momo/checkmomopayment", { orderId }),
-  createZaloPayment: ({ amount, productName, productDescription }) =>
-    apiCall("zalo/payment", { amount, productName, productDescription }),
-  checkZaloPayment: (app_trans_id) =>
-    apiCall("zalo/checkzalopayment", { app_trans_id }),
-
-  // Authentication
   register: (username, email, password) =>
-    apiCall("api/register", { username, email, password }),
-  login: (data) => apiCall("api/login", data),
-
-  // Get User by Token
+    apiCall("api/register", "POST", { username, email, password }),
+  login: (data) => apiCall("api/login", "POST", data),
   getUserInfo: () =>
-    axios.get(`${BASE_URL}/api/profile`, {
-      headers: {
-        token: localStorage.getItem("token"),
-      },
-    }).then((response) => response.data),  
-  
+    apiCall("api/profile", "GET", {}, { token: localStorage.getItem("token") }),
   changePassword: (currentPassword, newPassword) =>
-    axios.patch(
-      `${BASE_URL}/api/profile`,
+    apiCall(
+      "api/profile",
+      "PATCH",
       { currentPassword, newPassword },
-      {
-        headers: {
-          token: localStorage.getItem("token"),
-        },
-      }
-    ).then((response) => response.data),
+      { token: localStorage.getItem("token") }
+    ),
   changeEmail: (newEmail) =>
-    axios.patch(
-      `${BASE_URL}/api/profile`,
+    apiCall(
+      "api/profile",
+      "PATCH",
       { email: newEmail },
-      {
-        headers: {
-          token: localStorage.getItem("token"),
-        },
-      }
-    ).then((response) => response.data),
+      { token: localStorage.getItem("token") }
+    ),
+    linkGameId: (gameId) =>
+      apiCall(
+        "api/profile/gameId",
+        "PATCH",
+        { gameId },
+        { token: localStorage.getItem("token") }
+      ),
 };
 
 export default api;
