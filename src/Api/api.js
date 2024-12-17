@@ -44,6 +44,11 @@ const api = {
         { gameId },
         { token: localStorage.getItem("token") }
       ),
+      getGameId: (gameId) =>
+        apiCall(
+          `game/member/${gameId}`,
+          "GET"
+        ),
 };
 
 export default api;
