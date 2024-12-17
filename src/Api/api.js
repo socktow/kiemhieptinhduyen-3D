@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:4000";
+const getToken = () => localStorage.getItem("token");
 
 const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
   try {
@@ -8,7 +9,7 @@ const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
       url: `${BASE_URL}/${endpoint}`,
       method,
       data,
-      headers,
+      headers: { ...headers, token: getToken() },
     });
     return response.data;
   } catch (error) {
@@ -18,37 +19,15 @@ const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
 };
 
 const api = {
-  register: (username, email, password) =>
-    apiCall("api/register", "POST", { username, email, password }),
+  register: (username, email, password) => apiCall("api/register", "POST", { username, email, password }),
   login: (data) => apiCall("api/login", "POST", data),
-  getUserInfo: () =>
-    apiCall("api/profile", "GET", {}, { token: localStorage.getItem("token") }),
-  changePassword: (currentPassword, newPassword) =>
-    apiCall(
-      "api/profile",
-      "PATCH",
-      { currentPassword, newPassword },
-      { token: localStorage.getItem("token") }
-    ),
-  changeEmail: (newEmail) =>
-    apiCall(
-      "api/profile",
-      "PATCH",
-      { email: newEmail },
-      { token: localStorage.getItem("token") }
-    ),
-    linkGameId: (gameId) =>
-      apiCall(
-        "api/profile/gameId",
-        "PATCH",
-        { gameId },
-        { token: localStorage.getItem("token") }
-      ),
-      getGameId: (gameId) =>
-        apiCall(
-          `game/member/${gameId}`,
-          "GET"
-        ),
+  getUserInfo: () => apiCall("api/profile", "GET"),
+  changePassword: (currentPassword, newPassword) => apiCall("api/profile", "PATCH", { currentPassword, newPassword }),
+  changeEmail: (newEmail) => apiCall("api/profile", "PATCH", { email: newEmail }),
+  getGameId: (gameId) => apiCall(`game/member/${gameId}`, "GET"),
+  getAccountID: (account) => apiCall(`game/member/account/${account}`, "GET" , { account }),
+  postGameId: (Account, GameID, Character) => apiCall("game/member/gameid", "POST", { Account, GameID, Character }),
+  editGameId: (Account, GameID, Character) => apiCall("game/member/gameid", "PATCH", { Account, GameID, Character }),
 };
 
 export default api;

@@ -9,8 +9,29 @@ const InfoUser = ({ user }) => {
   const [gameId, setGameId] = useState("");
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [gameData, setGameData] = useState(null); // Store game data
+  const [gameData, setGameData] = useState(null);
 
+  // Lấy thông tin GameID cho tài khoản
+  const getAccountID = async (account) => {
+    try {
+      const response = await api.getAccountID(account);
+      // Kiểm tra phản hồi từ API
+      if (response && response.data) {
+        const { GameID } = response.data;
+        if (GameID) {
+          setGameId(GameID);
+        } else {
+          message.error("Không tìm thấy GameID cho tài khoản này.");
+        }
+      } else {
+        message.error("Dữ liệu không hợp lệ từ API.");
+      }
+    } catch (error) {
+      message.error("Không thể lấy GameID.");
+    }
+  };
+
+  // Hàm liên kết GameID với nhân vật
   const handleLinkCharacter = async () => {
     if (!gameId.trim()) {
       message.error("Vui lòng nhập GameID");
@@ -33,16 +54,23 @@ const InfoUser = ({ user }) => {
     }
   };
 
+  // Xác nhận liên kết thông tin
   const handleConfirm = async () => {
     if (!gameData) {
       message.error("Vui lòng xác nhận thông tin trước khi liên kết.");
       return;
     }
+    const { NAME: Character, ID: GameID } = gameData;
+    const Account = userInfo?.username;
+    if (!Account || !GameID || !Character) {
+      message.error("Tất cả các trường (Account, GameID, Character) đều là bắt buộc.");
+      return;
+    }
 
     setLoading(true);
     try {
-      const response = await api.linkGameId(gameId);
-      if (response.message === "GameID updated successfully") {
+      const response = await api.postGameId(Account, GameID, Character);
+      if (response.message === "GameID created successfully") {
         message.success(
           isEditing
             ? "Cập nhật GameID thành công"
@@ -53,11 +81,13 @@ const InfoUser = ({ user }) => {
       }
     } catch (error) {
       message.error(error.response?.data?.message || "Lỗi khi liên kết GameID");
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Mở Modal và reset thông tin khi đóng
   useEffect(() => {
     if (isModalOpen) {
       setGameId("");
@@ -65,6 +95,13 @@ const InfoUser = ({ user }) => {
       setIsEditing(false);
     }
   }, [isModalOpen]);
+
+  // Gọi API để lấy thông tin GameID khi người dùng có username
+  useEffect(() => {
+    if (userInfo?.username) {
+      getAccountID(userInfo.username);
+    }
+  }, [userInfo]);
 
   return (
     <div className="bg-white p-5 rounded shadow-md">
@@ -76,13 +113,13 @@ const InfoUser = ({ user }) => {
         </div>
         <div className="flex justify-between items-center">
           <span className="font-semibold">GameID:</span>
-          {userInfo?.gameId ? (
+          {gameId ? (
             <div className="flex items-center space-x-4">
-              <span>{userInfo.gameId}</span>
+              <span>{gameId}</span>
               <button
                 onClick={() => {
                   setIsEditing(true);
-                  setGameId(userInfo.gameId);
+                  setGameId(gameId);
                   setIsModalOpen(true);
                 }}
                 className="px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600
@@ -136,7 +173,7 @@ const InfoUser = ({ user }) => {
         onOk={handleConfirm}
         onCancel={() => setIsModalOpen(false)}
         confirmLoading={loading}
-        okText={gameData ? "Xác Nhận" : "Liên Kết Account"} // Dynamic button text
+        okText={gameData ? "Xác Nhận" : "Liên Kết Account"}
         cancelText="Hủy"
       >
         <div className="space-y-4">
