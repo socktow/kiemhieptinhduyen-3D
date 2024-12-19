@@ -1,7 +1,7 @@
 // apiCall.js
 import axios from "axios";
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "https://kiemhieptinhduyen.cloud";
 
 const apiCall = async (endpoint, data = {}, method = "POST", headers = {}) => {
   try {

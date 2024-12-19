@@ -25,9 +25,7 @@ const api = {
   changePassword: (currentPassword, newPassword) => apiCall("api/profile", "PATCH", { currentPassword, newPassword }),
   changeEmail: (newEmail) => apiCall("api/profile", "PATCH", { email: newEmail }),
   getGameId: (gameId) => apiCall(`game/member/${gameId}`, "GET"),
-  getAccountID: (account) => apiCall(`game/member/account/${account}`, "GET" , { account }),
-  postGameId: (Account, GameID, Character) => apiCall("game/member/gameid", "POST", { Account, GameID, Character }),
-  editGameId: (Account, GameID, Character) => apiCall("game/member/gameid", "PATCH", { Account, GameID, Character }),
+  getarticles: () => apiCall("api/articles", "GET"),
 };
 
 export default api;
