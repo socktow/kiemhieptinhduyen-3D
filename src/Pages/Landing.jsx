@@ -5,6 +5,8 @@ import NewFeed from "../Layouts/MainLayout/Homepage/NewFeed";
 import InfoGuide from "../Layouts/MainLayout/Homepage/InfoGuide";
 // Nhập tệp CSS vào đây
 import "./Landing.css";
+import DoGiam from "../Layouts/MainLayout/Homepage/DoGiam";
+import Footer from "../Layouts/MainLayout/Homepage/Footer";
 
 const Landing = () => {
   return (
@@ -14,6 +16,8 @@ const Landing = () => {
           <Download />
           <NewFeed />
           <InfoGuide />
+          <DoGiam />
+          <Footer />
         </div>
       </Hero>
     </div>
