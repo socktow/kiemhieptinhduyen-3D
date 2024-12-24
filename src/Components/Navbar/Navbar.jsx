@@ -9,10 +9,11 @@ const Navbar = () => {
   const { userInfo } = useSelector((state) => state.user);
 
   const navItems = [
-    { href: "/home/news/tin-tuc", label: "Tin Tức" },
-    { href: "/home/news/su-kien", label: "Sự Kiện" },
-    { href: "/home/news/tinh-nang", label: "Tính Năng" },
-    { href: "/home/news/huong-dan", label: "Hướng Dẫn" },
+    { href: "/home", label: "Trang Chủ" },
+    { href: "/home/news/tin-tuc", label: "Sự Kiện" },
+    { href: "/home/", label: "Đổi Quà" },
+    { href: "/home/", label: "Điều Khoản" },
+    { href: "/home/", label: "Hỗ Trợ" },
     {
       href: "https://www.facebook.com/odaycomotchuchu",
       label: "Cộng Đồng",
