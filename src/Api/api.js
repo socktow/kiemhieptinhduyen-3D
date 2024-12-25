@@ -1,12 +1,15 @@
 import axios from "axios";
 
-const BASE_URL = "https://kiemhieptinhduyen.cloud";
+const BASE_URL = "http://localhost:4000";
 const getToken = () => localStorage.getItem("token");
 
 const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
   try {
+    const url = `${BASE_URL}/api/${endpoint}`;
+    console.log("Making API call to:", url);
+    
     const response = await axios({
-      url: `${BASE_URL}/${endpoint}`,
+      url,
       method,
       data,
       headers: { ...headers, token: getToken() },
@@ -19,13 +22,14 @@ const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
 };
 
 const api = {
-  register: (username, email, password) => apiCall("api/register", "POST", { username, email, password }),
-  login: (data) => apiCall("api/login", "POST", data),
-  getUserInfo: () => apiCall("api/profile", "GET"),
-  changePassword: (currentPassword, newPassword) => apiCall("api/profile", "PATCH", { currentPassword, newPassword }),
-  changeEmail: (newEmail) => apiCall("api/profile", "PATCH", { email: newEmail }),
+  register: (username, email, password) => apiCall("register", "POST", { username, email, password }),
+  login: (data) => apiCall("login", "POST", data),
+  getUserInfo: () => apiCall("profile", "GET"),
+  changePassword: (currentPassword, newPassword) => apiCall("profile", "PATCH", { currentPassword, newPassword }),
+  changeEmail: (newEmail) => apiCall("profile", "PATCH", { email: newEmail }),
   getGameId: (gameId) => apiCall(`game/member/${gameId}`, "GET"),
-  getarticles: () => apiCall("api/articles", "GET"),
+  getarticles: () => apiCall("articles", "GET"),
+  getarticlebyid: (id) => apiCall(`articles/${id}`, "GET"),
 };
 
 export default api;

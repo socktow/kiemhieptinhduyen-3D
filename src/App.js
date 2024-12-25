@@ -18,6 +18,7 @@ import ImgContentPage from "./Assets/img-bg-news-top.jpg";
 import User from "./Components/User/User";
 import Naptien from "./Components/NapTien/Naptien";
 import AdminLayout from "./Layouts/AdminLayout/Index";
+import ArticleDetail from "./Pages/ArticleDetail";
 
 // Admin
 import PostCreate from "./Layouts/AdminLayout/BaiViet/PostCreate";
@@ -34,6 +35,7 @@ import LichSuNapThe from "./Layouts/AdminLayout/NapThe/LichSuNapThe";
 import RateNapThe from "./Layouts/AdminLayout/NapThe/RateNapThe";
 // Redux
 import { fetchUserInfo } from "./Redux/UserSlice";
+
 function App() {
   const [isEventActive] = React.useState(false);
   const { userInfo } = useSelector((state) => state.user);
@@ -63,35 +65,18 @@ function App() {
           <Route path="user" element={<User />} />
           <Route path="nap-tien" element={<Naptien />} />
           <Route path="news/:category" element={<PageCateGory />} />
-          <Route
-            path="news/tin-tuc"
-            element={
-              <PageCateGory banner={ImgContentPage} category="tin-tuc" />
-            }
-          />
+          <Route path="news/:category/:id" element={<ArticleDetail />} />
           <Route
             path="news/su-kien"
             element={
               <PageCateGory banner={ImgContentPage} category="su-kien" />
             }
           />
-          <Route
-            path="news/tinh-nang"
-            element={
-              <PageCateGory banner={ImgContentPage} category="tinh-nang" />
-            }
-          />
-          <Route
-            path="news/huong-dan"
-            element={
-              <PageCateGory banner={ImgContentPage} category="huong-dan" />
-            }
-          />
         </Route>
 
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<PostCreate />} />
+          <Route index element={<PostCreate />} />
           {/* Bài Viết */}
           <Route path="posts/create" element={<PostCreate />} />
           <Route path="posts/list" element={<PostList />} />

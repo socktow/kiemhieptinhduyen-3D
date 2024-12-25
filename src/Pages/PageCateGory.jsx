@@ -9,7 +9,8 @@ import innerpg2 from "../Assets/inner_bg2.webp";
 
 const PageCateGory = ({ banner }) => {
   const [articles, setArticles] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("tin-tuc");
+  const [allArticles, setAllArticles] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("su-kien");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
 
@@ -24,17 +25,25 @@ const PageCateGory = ({ banner }) => {
     const fetchArticles = async () => {
       try {
         const response = await api.getarticles();
+        setAllArticles(response);
         const filteredArticles = response.filter(
           (article) => article.contentType === selectedCategory
         );
         setArticles(filteredArticles);
-        setCurrentPage(1);
       } catch (error) {
         console.error("Error fetching articles:", error);
       }
     };
     fetchArticles();
-  }, [selectedCategory]);
+  }, []);
+
+  useEffect(() => {
+    const filteredArticles = allArticles.filter(
+      (article) => article.contentType === selectedCategory
+    );
+    setArticles(filteredArticles);
+    setCurrentPage(1);
+  }, [selectedCategory, allArticles]);
 
   const totalPages = Math.ceil(articles.length / itemsPerPage);
   const displayedArticles = articles.slice(
@@ -95,18 +104,33 @@ const PageCateGory = ({ banner }) => {
 
           {/* Articles List */}
           <div className="content space-y-8">
-            {displayedArticles.map((article) => (
-              <div key={article._id}>
-                <Item
-                  avatar={article.thumbnail}
-                  title={article.title}
-                  date={new Date(article.publishDate).toLocaleDateString(
-                    "vi-VN"
-                  )}
-                  link={`/news/${selectedCategory}/${article._id}`}
-                />
-              </div>
-            ))}
+            {displayedArticles.map((article) => {
+              console.log("Rendering article:", {
+                id: article._id,
+                title: article.title,
+                contentType: article.contentType,
+                data: article
+              });
+              
+              if (!article._id) {
+                console.error("Article missing ID:", article);
+                return null;
+              }
+
+              return (
+                <div key={article._id}>
+                  <Item
+                    avatar={article.thumbnail}
+                    title={article.title}
+                    date={new Date(article.publishDate).toLocaleDateString(
+                      "vi-VN"
+                    )}
+                    id={article._id}
+                    contentType={article.contentType}
+                  />
+                </div>
+              );
+            })}
           </div>
 
           {/* Pagination */}

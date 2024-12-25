@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const navItems = [
     { href: "/home", label: "Trang Chủ" },
-    { href: "/home/news/tin-tuc", label: "Sự Kiện" },
+    { href: "/home/news/su-kien", label: "Sự Kiện" },
     { href: "/home/", label: "Đổi Quà" },
     { href: "/home/", label: "Điều Khoản" },
     { href: "/home/", label: "Hỗ Trợ" },
