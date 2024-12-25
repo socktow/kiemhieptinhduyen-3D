@@ -12,6 +12,7 @@ const PageCateGory = ({ banner }) => {
   const [allArticles, setAllArticles] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("su-kien");
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(null);
   const itemsPerPage = 3;
 
   const categories = [
@@ -31,7 +32,7 @@ const PageCateGory = ({ banner }) => {
         );
         setArticles(filteredArticles);
       } catch (error) {
-        console.error("Error fetching articles:", error);
+        setError("Error fetching articles: " + error.message);
       }
     };
     fetchArticles();
@@ -82,38 +83,49 @@ const PageCateGory = ({ banner }) => {
         {/* Content */}
         <div className="relative z-10 bg-opacity-90 max-w-5xl mx-auto p-5 space-y-8">
           {/* Category Tabs */}
-          <div className="bg-white rounded-md shadow-md header text-xl md:text-3xl py-6 flex items-center justify-center gap-x-4">
-            {categories.map((cat, index) => (
-              <React.Fragment key={cat.name}>
-                <button
-                  onClick={() => setSelectedCategory(cat.path)}
-                  className={`px-6 py-2 font-semibold border-b-2 transition-all duration-300 ${
-                    selectedCategory === cat.path
-                      ? "border-white text-black"
-                      : "border-transparent text-black hover:border-white hover:text-blue-600"
-                  }`}
-                >
-                  {cat.name}
-                </button>
-                {index < categories.length - 1 && (
-                  <span className="text-gray-400 font-bold mx-2">|</span>
-                )}
-              </React.Fragment>
-            ))}
+          <div className="bg-white rounded-md shadow-md header text-xl md:text-3xl py-6 flex items-center justify-center md:gap-x-4">
+            {/* Hiển thị menu dạng nút trên màn hình lớn */}
+            <div className="hidden md:flex">
+              {categories.map((cat, index) => (
+                <React.Fragment key={cat.name}>
+                  <button
+                    onClick={() => setSelectedCategory(cat.path)}
+                    className={`px-6 py-2 font-semibold border-b-2 transition-all duration-300 ${
+                      selectedCategory === cat.path
+                        ? "border-white text-black"
+                        : "border-transparent text-black hover:border-white hover:text-blue-600"
+                    }`}
+                  >
+                    {cat.name}
+                  </button>
+                  {index < categories.length - 1 && (
+                    <span className="text-gray-400 font-bold mx-2">|</span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+
+            {/* Hiển thị menu dạng select trên màn hình nhỏ */}
+            <div className="flex md:hidden w-full justify-center">
+              <select
+                className=" px-4 py-2 text-black font-semibold text-3xl"
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                value={selectedCategory}
+              >
+                {categories.map((cat) => (
+                  <option key={cat.name} value={cat.path}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Articles List */}
           <div className="content space-y-8">
             {displayedArticles.map((article) => {
-              console.log("Rendering article:", {
-                id: article._id,
-                title: article.title,
-                contentType: article.contentType,
-                data: article
-              });
-              
               if (!article._id) {
-                console.error("Article missing ID:", article);
+                setError("Article missing ID: " + article);
                 return null;
               }
 

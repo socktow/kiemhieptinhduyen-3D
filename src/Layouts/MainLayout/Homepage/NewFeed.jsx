@@ -110,8 +110,26 @@ const NewFeed = () => {
                 selectedCategory={selectedCategory}
                 isLoading={isLoading}
                 onCategoryClick={setSelectedCategory}
-                onViewMoreClick={() => navigate("/home/news/tin-tuc")}
-                onArticleClick={(id) => navigate(`/home/news/${id}`)}
+                onViewMoreClick={() => {
+                  const categoryPath = selectedCategory === "Tất Cả" 
+                    ? "tin-tuc"
+                    : selectedCategory === "Tin Tức" 
+                      ? "tin-tuc" 
+                      : selectedCategory === "Sự Kiện"
+                        ? "su-kien"
+                        : "huong-dan";
+                  navigate(`/home/news/${categoryPath}`);
+                }}
+                onArticleClick={(id) => {
+                  const categoryPath = selectedCategory === "Tất Cả" 
+                    ? "tin-tuc"
+                    : selectedCategory === "Tin Tức" 
+                      ? "tin-tuc" 
+                      : selectedCategory === "Sự Kiện"
+                        ? "su-kien"
+                        : "huong-dan";
+                  navigate(`/home/news/${categoryPath}/${id}`);
+                }}
               />
             </div>
           </div>

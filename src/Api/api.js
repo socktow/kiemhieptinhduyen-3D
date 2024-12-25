@@ -5,9 +5,7 @@ const getToken = () => localStorage.getItem("token");
 
 const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {
   try {
-    const url = `${BASE_URL}/api/${endpoint}`;
-    console.log("Making API call to:", url);
-    
+    const url = `${BASE_URL}/api/${endpoint}`;    
     const response = await axios({
       url,
       method,
