@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "https://kiemhieptinhduyen.cloud";
 const getToken = () => localStorage.getItem("token");
 
 const apiCall = async (endpoint, method = "GET", data = {}, headers = {}) => {

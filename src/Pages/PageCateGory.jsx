@@ -12,7 +12,6 @@ const PageCateGory = ({ banner }) => {
   const [allArticles, setAllArticles] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("su-kien");
   const [currentPage, setCurrentPage] = useState(1);
-  const [error, setError] = useState(null);
   const itemsPerPage = 3;
 
   const categories = [
@@ -32,11 +31,11 @@ const PageCateGory = ({ banner }) => {
         );
         setArticles(filteredArticles);
       } catch (error) {
-        setError("Error fetching articles: " + error.message);
+        console.error("Error fetching articles:", error);
       }
     };
     fetchArticles();
-  }, []);
+  }, [selectedCategory]); // Đã thêm selectedCategory vào dependency array
 
   useEffect(() => {
     const filteredArticles = allArticles.filter(
@@ -84,7 +83,7 @@ const PageCateGory = ({ banner }) => {
         <div className="relative z-10 bg-opacity-90 max-w-5xl mx-auto p-5 space-y-8">
           {/* Category Tabs */}
           <div className="bg-white rounded-md shadow-md header text-xl md:text-3xl py-6 flex items-center justify-center md:gap-x-4">
-            {/* Hiển thị menu dạng nút trên màn hình lớn */}
+            {/* Menu dạng nút trên màn hình lớn */}
             <div className="hidden md:flex">
               {categories.map((cat, index) => (
                 <React.Fragment key={cat.name}>
@@ -105,10 +104,10 @@ const PageCateGory = ({ banner }) => {
               ))}
             </div>
 
-            {/* Hiển thị menu dạng select trên màn hình nhỏ */}
+            {/* Menu dạng select trên màn hình nhỏ */}
             <div className="flex md:hidden w-full justify-center">
               <select
-                className=" px-4 py-2 text-black font-semibold text-3xl"
+                className="px-4 py-2 text-black font-semibold text-3xl"
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 value={selectedCategory}
               >
@@ -123,26 +122,17 @@ const PageCateGory = ({ banner }) => {
 
           {/* Articles List */}
           <div className="content space-y-8">
-            {displayedArticles.map((article) => {
-              if (!article._id) {
-                setError("Article missing ID: " + article);
-                return null;
-              }
-
-              return (
-                <div key={article._id}>
-                  <Item
-                    avatar={article.thumbnail}
-                    title={article.title}
-                    date={new Date(article.publishDate).toLocaleDateString(
-                      "vi-VN"
-                    )}
-                    id={article._id}
-                    contentType={article.contentType}
-                  />
-                </div>
-              );
-            })}
+            {displayedArticles.map((article) => (
+              <div key={article._id}>
+                <Item
+                  avatar={article.thumbnail}
+                  title={article.title}
+                  date={new Date(article.publishDate).toLocaleDateString("vi-VN")}
+                  id={article._id}
+                  contentType={article.contentType}
+                />
+              </div>
+            ))}
           </div>
 
           {/* Pagination */}
@@ -158,9 +148,7 @@ const PageCateGory = ({ banner }) => {
                   <div
                     key={index + 1}
                     onClick={() => setCurrentPage(index + 1)}
-                    className={`relative cursor-pointer flex justify-center items-center ${
-                      currentPage === index + 1 ? "w-30 h-30" : "w-30 h-30"
-                    }`}
+                    className="relative cursor-pointer flex justify-center items-center"
                   >
                     <img
                       src={

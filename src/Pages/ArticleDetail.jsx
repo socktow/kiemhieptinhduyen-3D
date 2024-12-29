@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../Api/api";
 import innerpg1 from "../Assets/inner_bg1.webp";
 import innerpg2 from "../Assets/inner_bg2.webp";
@@ -7,7 +7,6 @@ import Breadcrums from "../Components/Breadcrums/Breadcrums";
 
 const ArticleDetail = () => {
   const { category, id } = useParams();
-  const navigate = useNavigate();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +18,7 @@ const ArticleDetail = () => {
         console.error("No ID in URL");
         setError("ID bài viết không hợp lệ");
         return;
-      }
+      }      
 
       try {
         const response = await api.getarticlebyid(id);
